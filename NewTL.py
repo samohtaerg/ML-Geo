@@ -19,7 +19,7 @@ class MTLModel:
     def __init__(self):
         self.Abar_old = None
 
-    def MTL(self, x, y, r, eta=0.05, delta=0.05, max_iter=2):
+    def MTL(self, x, y, r, eta=0.05, delta=0.05, max_iter=2000):
         T = x.shape[0]  # T个任务
         n = x.shape[1]  # n个样本
         p = x.shape[2]  # p个属性
@@ -68,7 +68,7 @@ class MTLModel:
 
         return (beta_hat_step1)
 
-    def MTL_transfer(self, x, y, r=3, T1=1, T2=0.05, R=5, r_bar=5, eta=0.05, max_iter=2, C1=1, C2=0.5, delta=0.05,
+    def MTL_transfer(self, x, y, r=3, T1=1, T2=0.05, R=5, r_bar=5, eta=0.05, max_iter=2000, C1=1, C2=0.5, delta=0.05,
                      adaptive=True, transfer=False):
         T = x.shape[0]
         n = x.shape[1]
@@ -140,10 +140,10 @@ class MTLModel:
         abar_old_array = read_abar_old()
         self.Abar_old = abar_old_array
 
-        print("At the end of MTL_ours after read, Abar_old:", self.Abar_old)
-
-        print("Abar_tf:", A_bar_tf)
-        print("Abarold_tf:", self.Abar_old)
+        # print("At the end of MTL_ours after read, Abar_old:", self.Abar_old)
+        #
+        # print("Abar_tf:", A_bar_tf)
+        # print("Abarold_tf:", self.Abar_old)
 
         if transfer:
             for t in range(T):
@@ -193,7 +193,7 @@ class MTLModel:
         n = 100
         p = 20
         r = 3
-        T = 3
+        T = 4
 
         # parameter setting: 1 outlier
         theta = np.array([[1, 0.5, 0], [1, -1, 1], [1.5, 1.5, 0], [1, 1, 0], [1, 0, 1], [-1, -1, -1]]).T * 2
@@ -221,7 +221,7 @@ class MTLModel:
         beta_outlier4 = np.random.uniform(-1, 1, p)
         beta = np.hstack((beta, beta_outlier4.reshape(p, 1)))
 
-        T = 7
+        T = 8
 
         # data generation with increased noise
         x_1 = np.zeros((T, n, p))
@@ -237,21 +237,21 @@ class MTLModel:
             beta_hat_single_task[:, t] = LinearRegression().fit(x_1[t, :, :], y_1[t, :]).coef_
 
         # MTL ours
-        beta_hat_ours = self.MTL_transfer(x_1, y_1, r=3, T1=1, T2=0.05, R=5, r_bar=5, eta=0.05, max_iter=2, C1=1,
+        beta_hat_ours = self.MTL_transfer(x_1, y_1, r=3, T1=1, T2=0.05, R=5, r_bar=5, eta=0.05, max_iter=2000, C1=1,
                                                  C2=0.5, delta=0.05, adaptive=False, transfer=False)
 
         # MTL the same representation
-        beta_hat = self.MTL(x =x_1, y=y_1, r=3, eta=0.05, max_iter=2)
+        beta_hat = self.MTL(x =x_1, y=y_1, r=3, eta=0.05, max_iter=2000)
 
         # MTL_transfer (need to create this function)
-        beta_hat_transfer = self.MTL_transfer(x_1, y_1, r=3, T1=1, T2=0.05, R=5, r_bar=5, eta=0.05, max_iter=2, C1=1,
+        beta_hat_transfer = self.MTL_transfer(x_1, y_1, r=3, T1=1, T2=0.05, R=5, r_bar=5, eta=0.05, max_iter=2000, C1=1,
                                          C2=0.5, delta=0.05, adaptive=False, transfer=True)
 
-        result = np.zeros(4)
+        result = np.zeros(3)
         result[0] = max(self.all_distance(beta_hat_single_task, beta)[0:(T - 1)])
         result[1] = max(self.all_distance(beta_hat, beta)[0:(T - 1)])
-        result[2] = max(self.all_distance(beta_hat_ours, beta)[0:(T - 1)])
-        result[3] = max(self.all_distance(beta_hat_transfer, beta)[0:(T - 1)])
+        # result[2] = max(self.all_distance(beta_hat_ours, beta)[0:(T - 1)])
+        result[2] = max(self.all_distance(beta_hat_transfer, beta)[0:(T - 1)])
 
         return result
 
@@ -260,11 +260,11 @@ model_instance = MTLModel()
 
 h_list = np.arange(0.1, 0.9, 0.1)
 
-mse_noisier = np.zeros((h_list.size, 4))
-mse_noisier = np.array(Parallel(n_jobs=4)(delayed(model_instance.our_task_noisier)(h) for h in h_list))
-mse_noisier = mse_noisier.reshape((1, h_list.size * 4))
+mse_noisier = np.zeros((h_list.size, 3))
+mse_noisier = np.array(Parallel(n_jobs=3)(delayed(model_instance.our_task_noisier)(h) for h in h_list))
+mse_noisier = mse_noisier.reshape((1, h_list.size * 3))
 
-with open("C:/Users/samoh/PycharmProjects/MTLa/venv/NewTL.py" + str(0) + "_1.csv", "w",
+with open("C:/Users/samoh/PycharmProjects/MTLa/venv/NewTL.py" + str(0) + "_7.csv", "w",
             newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerows(mse_noisier)
