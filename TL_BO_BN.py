@@ -264,7 +264,7 @@ mse_noisier = np.zeros((h_list.size, 3))
 mse_noisier = np.array(Parallel(n_jobs=3)(delayed(model_instance.our_task_noisier)(h) for h in h_list))
 mse_noisier = mse_noisier.reshape((1, h_list.size * 3))
 
-with open("C:/Users/samoh/PycharmProjects/MTLa/venv/New_TL.py" + str(0) + "_3.csv", "w",
+with open("C:/Users/samoh/PycharmProjects/MTLa/venv/TL_BO_BN.py" + str(0) + "_3.csv", "w",
             newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerows(mse_noisier)
