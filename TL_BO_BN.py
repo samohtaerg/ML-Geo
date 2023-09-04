@@ -189,7 +189,7 @@ class MTLModel:
             s[t] = norm(beta_hat[:, t] - beta[:, t])
         return (s)
 
-    def our_task_noisier(self, h, noise_factor=3):
+    def our_task_noisier(self, h, noise_factor=1):
         n = 100
         p = 20
         r = 3
