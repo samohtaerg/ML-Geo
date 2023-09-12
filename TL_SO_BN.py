@@ -193,7 +193,7 @@ class MTLModel:
         n = 100
         p = 20
         r = 3
-        T = 7
+        T = 6
 
         # parameter setting: 1 outlier
         theta = np.array([[1, 0.5, 0], [1, -1, 1], [1.5, 1.5, 0], [1, 1, 0], [1, 0, 1], [-1, -1, -1]]).T * 2
@@ -212,7 +212,7 @@ class MTLModel:
         beta_outlier = np.random.uniform(-1, 1, p)
         beta = np.hstack((beta, beta_outlier.reshape(p, 1)))
 
-        T = 8
+        T = 7
 
         # data generation with increased noise
         x_1 = np.zeros((T, n, p))
@@ -255,7 +255,7 @@ mse_noisier = np.zeros((h_list.size, 3))
 mse_noisier = np.array(Parallel(n_jobs=3)(delayed(model_instance.our_task_noisier)(h) for h in h_list))
 mse_noisier = mse_noisier.reshape((1, h_list.size * 3))
 
-with open("C:/Users/samoh/PycharmProjects/MTLa/venv/TL_SO_BN.py" + str(0) + "_1.csv", "w",
+with open("C:/Users/samoh/PycharmProjects/MTLa/venv/TL_SO_BN.py" + str(0) + "_9.csv", "w",
             newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerows(mse_noisier)

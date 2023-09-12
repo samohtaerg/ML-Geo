@@ -193,7 +193,7 @@ class MTLModel:
         n = 100
         p = 20
         r = 3
-        T = 7
+        T = 1
 
         # parameter setting: 1 outlier
         theta = np.array([[1, 0.5, 0], [1, -1, 1], [1.5, 1.5, 0], [1, 1, 0], [1, 0, 1], [-1, -1, -1]]).T * 2
@@ -212,7 +212,7 @@ class MTLModel:
         beta_outlier = np.random.uniform(-1, 1, p)
         beta = np.hstack((beta, beta_outlier.reshape(p, 1)))
 
-        T = 8
+        T = 2
 
         # data generation with increased noise
         x_1 = np.zeros((T, n, p))
