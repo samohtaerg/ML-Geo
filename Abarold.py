@@ -11,6 +11,7 @@ from numpy import log
 from joblib import Parallel, delayed
 import csv
 
+# We use this file to generate 'Abarold' for transfer learning.
 # --- SEEDING ---
 np.random.seed(0)
 
